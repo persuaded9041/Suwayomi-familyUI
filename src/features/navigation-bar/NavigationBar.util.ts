@@ -6,6 +6,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { isAdminPath } from '@/features/authentication/AccessPolicy.ts';
+import { AuthManager } from '@/features/authentication/AuthManager.ts';
 import type { NavbarItem } from '@/features/navigation-bar/NavigationBar.types.ts';
 import type { MetadataHistorySettings } from '@/features/history/History.types.ts';
 import type { StaticAppRoute } from '@/base/AppRoute.constants.ts';
@@ -39,6 +41,7 @@ export class NavigationBarUtil {
         { hideBoth, hideDesktop, hideMobile, ...filter }: FilterSettings,
     ): NavbarItem[] {
         return items
+            .filter((item) => AuthManager.isAdmin() || !isAdminPath(item.path))
             .filter((item) => !NavigationBarUtil.isPathRestricted(item.path, filter))
             .filter((item) => {
                 switch (item.show) {

@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { AuthManager } from '@/features/authentication/AuthManager.ts';
 import { getDisplayTitle } from '@/features/customMetadata/CatalogMetadata.ts';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
@@ -42,6 +43,7 @@ const DEFAULT_MANGA = { ...FALLBACK_MANGA, title: '' };
 
 const BaseReaderOverlayHeaderMobile = ({ isVisible, ref }: MobileHeaderProps & { ref?: Ref<HTMLDivElement> }) => {
     const { t } = useLingui();
+    const isAdmin = AuthManager.useIsAdmin();
     const popupState = usePopupState({ popupId: 'reader-overlay-more-menu', variant: 'popover' });
     const currentChapter = useReaderChaptersStore('currentChapter');
 
@@ -107,15 +109,17 @@ const BaseReaderOverlayHeaderMobile = ({ isVisible, ref }: MobileHeaderProps & {
                     >
                         {t`Open in browser`}
                     </MenuItem>
-                    <MenuItem
-                        component={Link}
-                        disabled={!realUrl}
-                        href={realUrl ? requestManager.getWebviewUrl(realUrl) : ''}
-                        rel="noreferrer"
-                        target="_blank"
-                    >
-                        {t`Open in WebView`}
-                    </MenuItem>
+                    {isAdmin && (
+                        <MenuItem
+                            component={Link}
+                            disabled={!realUrl}
+                            href={realUrl ? requestManager.getWebviewUrl(realUrl) : ''}
+                            rel="noreferrer"
+                            target="_blank"
+                        >
+                            {t`Open in WebView`}
+                        </MenuItem>
+                    )}
                     <ShareGuard>
                         <MenuItem
                             disabled={!realUrl}

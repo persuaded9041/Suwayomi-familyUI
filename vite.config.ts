@@ -48,6 +48,9 @@ export default defineConfig(({ command }) => ({
     server: {
         port: Number(process.env.PORT),
         allowedHosts: process.env.ALLOWED_HOSTS?.split(',').map((s) => s.trim()),
+        watch: {
+            ignored: ['**/.pnpm-store/**'],
+        },
     },
     resolve: {
         tsconfigPaths: true,

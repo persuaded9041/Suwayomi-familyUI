@@ -6,6 +6,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { AdminOnly } from '@/features/authentication/components/AdminOnly.tsx';
+import { isAdminPath } from '@/features/authentication/AccessPolicy.ts';
 import CssBaseline from '@mui/material/CssBaseline';
 import type { PropsWithChildren, ReactNode } from 'react';
 import React, { useEffect, useLayoutEffect, useState } from 'react';
@@ -157,6 +159,8 @@ const ReactRouterSetter = () => {
 
 const PrivateRoutes = () => {
     const isAuthenticated = AuthManager.useIsAuthenticated();
+    const isAdmin = AuthManager.useIsAdmin();
+    const { pathname } = useLocation();
 
     if (!isAuthenticated) {
         return (
@@ -168,6 +172,10 @@ const PrivateRoutes = () => {
                 replace
             />
         );
+    }
+
+    if (!isAdmin && isAdminPath(pathname)) {
+        return <Navigate to={AppRoutes.library.path()} replace />;
     }
 
     return <Outlet />;
@@ -333,8 +341,10 @@ export const App: React.FC = () => (
         <CssBaseline enableColorScheme />
 
         <InitializeGuard>
-            <ServerUpdateChecker />
-            <WebUIUpdateChecker />
+            <AdminOnly>
+                <ServerUpdateChecker />
+                <WebUIUpdateChecker />
+            </AdminOnly>
 
             <Box sx={{ display: 'flex' }}>
                 <OffsetContainerRoot>

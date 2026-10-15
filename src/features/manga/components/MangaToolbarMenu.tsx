@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { AuthManager } from '@/features/authentication/AuthManager.ts';
 import { getDisplayTitle } from '@/features/customMetadata/CatalogMetadata.ts';
 import Label from '@mui/icons-material/Label';
 import MoreHoriz from '@mui/icons-material/MoreHoriz';
@@ -46,6 +47,7 @@ interface IProps {
 
 export const MangaToolbarMenu = ({ manga, onRefresh, refreshing }: IProps) => {
     const { t } = useLingui();
+    const isAdmin = AuthManager.useIsAdmin();
 
     const theme = useTheme();
     const isLargeScreen = useMediaQuery(theme.breakpoints.up('sm'));
@@ -72,17 +74,19 @@ export const MangaToolbarMenu = ({ manga, onRefresh, refreshing }: IProps) => {
         <>
             {isLargeScreen && (
                 <>
-                    <CustomTooltip title={t`Reload data from source`} disabled={refreshing}>
-                        <IconButton
-                            onClick={() => {
-                                onRefresh();
-                            }}
-                            disabled={refreshing}
-                            color="inherit"
-                        >
-                            <Refresh />
-                        </IconButton>
-                    </CustomTooltip>
+                    {isAdmin && (
+                        <CustomTooltip title={t`Reload data from source`} disabled={refreshing}>
+                            <IconButton
+                                onClick={() => {
+                                    onRefresh();
+                                }}
+                                disabled={refreshing}
+                                color="inherit"
+                            >
+                                <Refresh />
+                            </IconButton>
+                        </CustomTooltip>
+                    )}
                     {settings.mangaDynamicColorSchemes && (
                         <CustomTooltip title={t`Save dynamic color theme`}>
                             <IconButton onClick={saveDynamicColorTheme} color="inherit">
@@ -108,7 +112,7 @@ export const MangaToolbarMenu = ({ manga, onRefresh, refreshing }: IProps) => {
                             </IconButton>
                         </CustomTooltip>
                     </ShareGuard>
-                    {manga.inLibrary && (
+                    {isAdmin && manga.inLibrary && (
                         <>
                             <CustomTooltip title={t`Migrate`}>
                                 <IconButton
@@ -159,18 +163,20 @@ export const MangaToolbarMenu = ({ manga, onRefresh, refreshing }: IProps) => {
                             },
                         }}
                     >
-                        <MenuItem
-                            onClick={() => {
-                                onRefresh();
-                                handleClose();
-                            }}
-                            disabled={refreshing}
-                        >
-                            <ListItemIcon>
-                                <Refresh fontSize="small" />
-                            </ListItemIcon>
-                            <ListItemText>{t`Reload data from source`}</ListItemText>
-                        </MenuItem>
+                        {isAdmin && (
+                            <MenuItem
+                                onClick={() => {
+                                    onRefresh();
+                                    handleClose();
+                                }}
+                                disabled={refreshing}
+                            >
+                                <ListItemIcon>
+                                    <Refresh fontSize="small" />
+                                </ListItemIcon>
+                                <ListItemText>{t`Reload data from source`}</ListItemText>
+                            </MenuItem>
+                        )}
                         {settings.mangaDynamicColorSchemes && (
                             <MenuItem onClick={saveDynamicColorTheme}>
                                 <ListItemIcon>
@@ -179,33 +185,34 @@ export const MangaToolbarMenu = ({ manga, onRefresh, refreshing }: IProps) => {
                                 <ListItemText>{t`Save dynamic color theme`}</ListItemText>
                             </MenuItem>
                         )}
-                        {manga.inLibrary && [
-                            <MenuItem
-                                key="migrate"
-                                onClick={() => {
-                                    Mangas.migrate([manga.id]).catch(
-                                        defaultPromiseErrorHandler('MangaToolbarMenu::migrate'),
-                                    );
-                                }}
-                            >
-                                <ListItemIcon>
-                                    <SyncAltIcon fontSize="small" />
-                                </ListItemIcon>
-                                <ListItemText>{t`Migrate`}</ListItemText>
-                            </MenuItem>,
-                            <MenuItem
-                                key="categories"
-                                onClick={() => {
-                                    openCategorySelection();
-                                    handleClose();
-                                }}
-                            >
-                                <ListItemIcon>
-                                    <Label fontSize="small" />
-                                </ListItemIcon>
-                                <ListItemText>{t`Edit manga categories`}</ListItemText>
-                            </MenuItem>,
-                        ]}
+                        {isAdmin &&
+                            manga.inLibrary && [
+                                <MenuItem
+                                    key="migrate"
+                                    onClick={() => {
+                                        Mangas.migrate([manga.id]).catch(
+                                            defaultPromiseErrorHandler('MangaToolbarMenu::migrate'),
+                                        );
+                                    }}
+                                >
+                                    <ListItemIcon>
+                                        <SyncAltIcon fontSize="small" />
+                                    </ListItemIcon>
+                                    <ListItemText>{t`Migrate`}</ListItemText>
+                                </MenuItem>,
+                                <MenuItem
+                                    key="categories"
+                                    onClick={() => {
+                                        openCategorySelection();
+                                        handleClose();
+                                    }}
+                                >
+                                    <ListItemIcon>
+                                        <Label fontSize="small" />
+                                    </ListItemIcon>
+                                    <ListItemText>{t`Edit manga categories`}</ListItemText>
+                                </MenuItem>,
+                            ]}
                         <ShareGuard>
                             <MenuItem
                                 disabled={!manga.realUrl}

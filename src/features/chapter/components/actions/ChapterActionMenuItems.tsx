@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { AuthManager } from '@/features/authentication/AuthManager.ts';
 import { STABLE_EMPTY_ARRAY, STABLE_EMPTY_OBJECT } from '@/base/Base.constants.ts';
 import CheckBoxOutlineBlank from '@mui/icons-material/CheckBoxOutlineBlank';
 import Delete from '@mui/icons-material/Delete';
@@ -78,6 +79,7 @@ export const ChapterActionMenuItems = ({
     selectable = true,
 }: Props) => {
     const { t } = useLingui();
+    const isAdmin = AuthManager.useIsAdmin();
 
     const isSingleMode = !!chapter;
     const { isDownloaded, isRead, isBookmarked } = chapter ?? STABLE_EMPTY_OBJECT;
@@ -191,22 +193,24 @@ export const ChapterActionMenuItems = ({
                         }}
                         title={t`Open in browser`}
                     />
-                    <MenuItem
-                        Icon={IconWebView}
-                        disabled={!chapter!.realUrl}
-                        onClick={() => {
-                            window.open(
-                                requestManager.getWebviewUrl(chapter!.realUrl!),
-                                '_blank',
-                                'noopener,noreferrer',
-                            );
-                            onClose();
-                        }}
-                        title={t`Open in WebView`}
-                    />
+                    {isAdmin && (
+                        <MenuItem
+                            Icon={IconWebView}
+                            disabled={!chapter!.realUrl}
+                            onClick={() => {
+                                window.open(
+                                    requestManager.getWebviewUrl(chapter!.realUrl!),
+                                    '_blank',
+                                    'noopener,noreferrer',
+                                );
+                                onClose();
+                            }}
+                            title={t`Open in WebView`}
+                        />
+                    )}
                 </>
             )}
-            {shouldShowMenuItem(canBeDownloaded) && (
+            {isAdmin && shouldShowMenuItem(canBeDownloaded) && (
                 <MenuItem
                     Icon={Download}
                     disabled={isMenuItemDisabled(!downloadableChapters.length)}
@@ -214,7 +218,7 @@ export const ChapterActionMenuItems = ({
                     title={getMenuItemTitle('download', downloadableChapters.length)}
                 />
             )}
-            {shouldShowMenuItem(Chapters.isDownloading(chapter?.id ?? FALLBACK_CHAPTER.id)) && (
+            {isAdmin && shouldShowMenuItem(Chapters.isDownloading(chapter?.id ?? FALLBACK_CHAPTER.id)) && (
                 <MenuItem
                     Icon={CancelIcon}
                     disabled={isMenuItemDisabled(!downloadingChapters.length)}
@@ -222,7 +226,7 @@ export const ChapterActionMenuItems = ({
                     title={getMenuItemTitle('download_cancel', downloadingChapters.length)}
                 />
             )}
-            {shouldShowMenuItem(isDownloaded) && (
+            {isAdmin && shouldShowMenuItem(isDownloaded) && (
                 <MenuItem
                     Icon={Delete}
                     disabled={isMenuItemDisabled(!downloadedChapters.length)}

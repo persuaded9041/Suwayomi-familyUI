@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { AuthManager } from '@/features/authentication/AuthManager.ts';
 import CheckBoxOutlineBlank from '@mui/icons-material/CheckBoxOutlineBlank';
 import Delete from '@mui/icons-material/Delete';
 import Download from '@mui/icons-material/Download';
@@ -73,6 +74,7 @@ export const MangaActionMenuItems = ({
     setHideMenu,
 }: Props) => {
     const { t } = useLingui();
+    const isAdmin = AuthManager.useIsAdmin();
 
     const [isTrackDialogOpen, setIsTrackDialogOpen] = useState(false);
 
@@ -121,7 +123,7 @@ export const MangaActionMenuItems = ({
             {!!handleSelection && isSingleMode && (
                 <MenuItem onClick={handleSelect} Icon={CheckBoxOutlineBlank} title={t`Select`} />
             )}
-            {shouldShowMenuItem(isDownloadable) && (
+            {isAdmin && shouldShowMenuItem(isDownloadable) && (
                 <NestedMenuItem
                     disabled={isMenuItemDisabled(!downloadableMangas.length)}
                     LeftIcon={Download}
@@ -134,7 +136,7 @@ export const MangaActionMenuItems = ({
                     />
                 </NestedMenuItem>
             )}
-            {shouldShowMenuItem(hasDownloadedChapters) && (
+            {isAdmin && shouldShowMenuItem(hasDownloadedChapters) && (
                 <MenuItem
                     Icon={Delete}
                     disabled={isMenuItemDisabled(!downloadedMangas.length)}
@@ -158,39 +160,43 @@ export const MangaActionMenuItems = ({
                     title={getMenuItemTitle('mark_as_unread', readMangas.length)}
                 />
             )}
-            <MenuItem
-                title={getMenuItemTitle('migrate', selectedMangas.length)}
-                Icon={SyncAltIcon}
-                onClick={() => performAction('migrate', selectedMangas)}
-            />
-            {isSingleMode && (
-                <MenuItem
-                    onClick={() => {
-                        setIsTrackDialogOpen(true);
-                        setHideMenu(true);
-                    }}
-                    Icon={SyncIcon}
-                    title={getMenuItemTitle('track', selectedMangas.length)}
-                />
+            {isAdmin && (
+                <>
+                    <MenuItem
+                        title={getMenuItemTitle('migrate', selectedMangas.length)}
+                        Icon={SyncAltIcon}
+                        onClick={() => performAction('migrate', selectedMangas)}
+                    />
+                    {isSingleMode && (
+                        <MenuItem
+                            onClick={() => {
+                                setIsTrackDialogOpen(true);
+                                setHideMenu(true);
+                            }}
+                            Icon={SyncIcon}
+                            title={getMenuItemTitle('track', selectedMangas.length)}
+                        />
+                    )}
+                    <MenuItem
+                        onClick={() => {
+                            AwaitableComponent.show(CategorySelect, {
+                                mangaId: manga?.id,
+                                mangaIds: !isSingleMode ? Mangas.getIds(selectedMangas) : undefined,
+                                addToLibrary: false,
+                            });
+                            setHideMenu(true);
+                            onClose();
+                        }}
+                        Icon={Label}
+                        title={getMenuItemTitle('change_categories', selectedMangas.length)}
+                    />
+                    <MenuItem
+                        onClick={() => performAction('remove_from_library', selectedMangas)}
+                        Icon={FavoriteBorderIcon}
+                        title={getMenuItemTitle('remove_from_library', selectedMangas.length)}
+                    />
+                </>
             )}
-            <MenuItem
-                onClick={() => {
-                    AwaitableComponent.show(CategorySelect, {
-                        mangaId: manga?.id,
-                        mangaIds: !isSingleMode ? Mangas.getIds(selectedMangas) : undefined,
-                        addToLibrary: false,
-                    });
-                    setHideMenu(true);
-                    onClose();
-                }}
-                Icon={Label}
-                title={getMenuItemTitle('change_categories', selectedMangas.length)}
-            />
-            <MenuItem
-                onClick={() => performAction('remove_from_library', selectedMangas)}
-                Icon={FavoriteBorderIcon}
-                title={getMenuItemTitle('remove_from_library', selectedMangas.length)}
-            />
             {isTrackDialogOpen && (
                 <Dialog
                     open

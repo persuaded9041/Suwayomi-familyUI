@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { AuthManager } from '@/features/authentication/AuthManager.ts';
 import type { MessageDescriptor } from '@lingui/core';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
@@ -36,6 +37,7 @@ export const DownloadStateIndicatorCircular = ({
     color?: string;
 }) => {
     const { t } = useLingui();
+    const isAdmin = AuthManager.useIsAdmin();
 
     const { ref, hovered } = useHover();
 
@@ -77,7 +79,7 @@ export const DownloadStateIndicatorCircular = ({
                 <Typography
                     variant="caption"
                     component="div"
-                    sx={{ color, position: 'absolute', opacity: Number(!hovered) }}
+                    sx={{ color, position: 'absolute', opacity: Number(!hovered || !isAdmin) }}
                 >
                     <>
                         {isDownloading && progress}
@@ -89,21 +91,23 @@ export const DownloadStateIndicatorCircular = ({
                         )}
                     </>
                 </Typography>
-                <CustomTooltip title={t`Cancel`}>
-                    <IconButton
-                        sx={{ opacity: Number(hovered) }}
-                        color="inherit"
-                        {...MUIUtil.preventRippleProp()}
-                        onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
+                {isAdmin && (
+                    <CustomTooltip title={t`Cancel`}>
+                        <IconButton
+                            sx={{ opacity: Number(hovered) }}
+                            color="inherit"
+                            {...MUIUtil.preventRippleProp()}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
 
-                            Chapters.cancelDownload([chapterId]);
-                        }}
-                    >
-                        <ClearIcon />
-                    </IconButton>
-                </CustomTooltip>
+                                Chapters.cancelDownload([chapterId]);
+                            }}
+                        >
+                            <ClearIcon />
+                        </IconButton>
+                    </CustomTooltip>
+                )}
             </Box>
         </Box>
     );

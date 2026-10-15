@@ -20,6 +20,7 @@ import { useNavBarContext } from '@/features/navigation-bar/NavbarContext.tsx';
 import { useResizeObserver } from '@/base/hooks/useResizeObserver.tsx';
 import type { NavbarItem } from '@/features/navigation-bar/NavigationBar.types.ts';
 import { NavigationBarItem } from '@/features/navigation-bar/components/NavigationBarItem.tsx';
+import { LogoutButton } from '@/features/authentication/components/LogoutButton.tsx';
 
 const DrawerHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -78,6 +79,7 @@ export const DesktopSideBar = ({ navBarItems }: { navBarItems: NavbarItem[] }) =
                     {navBarItems.map((navBarItem) => (
                         <NavigationBarItem key={navBarItem.path} {...navBarItem} />
                     ))}
+                    <LogoutButton collapsed={isCollapsed} />
                 </List>
             </Box>
         </Drawer>

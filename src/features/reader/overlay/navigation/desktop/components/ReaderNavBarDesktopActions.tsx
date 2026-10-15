@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { AdminOnly } from '@/features/authentication/components/AdminOnly.tsx';
 import { getDisplayTitle } from '@/features/customMetadata/CatalogMetadata.ts';
 import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
@@ -116,17 +117,19 @@ export const ReaderNavBarDesktopActions = memo(() => {
                     <IconBrowser />
                 </IconButton>
             </CustomTooltip>
-            <CustomTooltip title={t`Open in WebView`} disabled={!realUrl}>
-                <IconButton
-                    disabled={!realUrl}
-                    href={realUrl ? requestManager.getWebviewUrl(realUrl) : ''}
-                    rel="noreferrer"
-                    target="_blank"
-                    color="inherit"
-                >
-                    <IconWebView />
-                </IconButton>
-            </CustomTooltip>
+            <AdminOnly>
+                <CustomTooltip title={t`Open in WebView`} disabled={!realUrl}>
+                    <IconButton
+                        disabled={!realUrl}
+                        href={realUrl ? requestManager.getWebviewUrl(realUrl) : ''}
+                        rel="noreferrer"
+                        target="_blank"
+                        color="inherit"
+                    >
+                        <IconWebView />
+                    </IconButton>
+                </CustomTooltip>
+            </AdminOnly>
             <ShareGuard>
                 <CustomTooltip title={t`Share`} disabled={!realUrl}>
                     <IconButton

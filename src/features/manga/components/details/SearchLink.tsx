@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { AuthManager } from '@/features/authentication/AuthManager.ts';
 import type { ReactNode } from 'react';
 import Link from '@mui/material/Link';
 import { Link as RouterLink } from 'react-router-dom';
@@ -24,7 +25,11 @@ export const SearchLink = ({
     mode: MangaLocationState['mode'] | 'source.global-search';
     children?: ReactNode;
 }) => {
+    const isAdmin = AuthManager.useIsAdmin();
     const link = (() => {
+        if (!isAdmin) {
+            return AppRoutes.library.path(undefined, query);
+        }
         const isSourceMode = mode === 'source' && sourceId !== undefined;
         if (isSourceMode) {
             return AppRoutes.sources.children.browse.path(sourceId, query);

@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { AuthManager } from '@/features/authentication/AuthManager.ts';
 import { useCallback, useLayoutEffect, useMemo, useRef } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -41,6 +42,7 @@ export function DefaultNavBar() {
         setNavBarWidth,
     } = useNavBarContext();
 
+    const isAdmin = AuthManager.useIsAdmin();
     const theme = useTheme();
     const getOptionForDirection = useGetOptionForDirection();
     const { pathname } = useLocation();
@@ -77,7 +79,7 @@ export function DefaultNavBar() {
                 hideDesktop: isMobileWidth,
                 hideMobile: !isMobileWidth,
             }),
-        [isMobileWidth, hideHistory],
+        [isMobileWidth, hideHistory, isAdmin],
     );
     const NavBarComponent = useMemo(() => (isMobileWidth ? MobileBottomBar : DesktopSideBar), [isMobileWidth]);
 

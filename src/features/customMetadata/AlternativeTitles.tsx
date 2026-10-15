@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { AdminOnly } from '@/features/authentication/components/AdminOnly.tsx';
 import { Fragment, useState } from 'react';
 import { useLingui } from '@lingui/react/macro';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -160,18 +161,20 @@ export const AlternativeTitles = ({ work }: { work: MangaIdInfo & MangaMetaInfo 
                                   </Fragment>
                               ))
                             : t`Unknown`}
-                        <CustomTooltip title={t`Edit alternative titles`}>
-                            <IconButton
-                                size="small"
-                                aria-label={t`Edit alternative titles`}
-                                onClick={() => {
-                                    setDraft(createAlternativeTitleDrafts(titles));
-                                    setOpen(true);
-                                }}
-                            >
-                                <EditIcon fontSize="small" />
-                            </IconButton>
-                        </CustomTooltip>
+                        <AdminOnly>
+                            <CustomTooltip title={t`Edit alternative titles`}>
+                                <IconButton
+                                    size="small"
+                                    aria-label={t`Edit alternative titles`}
+                                    onClick={() => {
+                                        setDraft(createAlternativeTitleDrafts(titles));
+                                        setOpen(true);
+                                    }}
+                                >
+                                    <EditIcon fontSize="small" />
+                                </IconButton>
+                            </CustomTooltip>
+                        </AdminOnly>
                     </>
                 }
             />

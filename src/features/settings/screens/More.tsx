@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { AuthManager } from '@/features/authentication/AuthManager.ts';
 import { Fragment } from 'react';
 import List from '@mui/material/List';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -24,10 +25,12 @@ import type { NavbarItem } from '@/features/navigation-bar/NavigationBar.types.t
 import { NavBarItemMoreGroup } from '@/features/navigation-bar/NavigationBar.types.ts';
 import { useAppTitle } from '@/features/navigation-bar/hooks/useAppTitle.ts';
 import { STABLE_EMPTY_ARRAY } from '@/base/Base.constants.ts';
+import { LogoutButton } from '@/features/authentication/components/LogoutButton.tsx';
 
 export const More = () => {
     const { t } = useLingui();
     const isMobileWidth = MediaQuery.useIsMobileWidth();
+    const isAdmin = AuthManager.useIsAdmin();
 
     useAppTitle(t`More`);
 
@@ -47,14 +50,18 @@ export const More = () => {
 
     const hiddenItemsMoreGroup = [
         ...(hiddenNavBarItemsByMoreGroup[NavBarItemMoreGroup.HIDDEN_ITEM] ?? STABLE_EMPTY_ARRAY),
-        {
-            path: AppRoutes.settings.children.categories.path,
-            title: msg`Categories`,
-            SelectedIconComponent: ListAltIcon,
-            IconComponent: ListAltIcon,
-            show: 'both',
-            moreGroup: NavBarItemMoreGroup.HIDDEN_ITEM,
-        },
+        ...(isAdmin
+            ? [
+                  {
+                      path: AppRoutes.settings.children.categories.path,
+                      title: msg`Categories`,
+                      SelectedIconComponent: ListAltIcon,
+                      IconComponent: ListAltIcon,
+                      show: 'both' as const,
+                      moreGroup: NavBarItemMoreGroup.HIDDEN_ITEM,
+                  },
+              ]
+            : []),
     ] satisfies NavbarItem[];
 
     const finalHiddenNavBarItemsByGroup: typeof hiddenNavBarItemsByMoreGroup = {
@@ -64,22 +71,25 @@ export const More = () => {
 
     return (
         <List sx={{ p: 0 }}>
-            {Object.entries(finalHiddenNavBarItemsByGroup).map(([group, items], index, list) => (
-                <Fragment key={group}>
-                    {items.map((item) => (
-                        <ListItemLink key={item.path} to={item.path}>
-                            <ListItemIcon>
-                                <item.IconComponent />
-                            </ListItemIcon>
-                            <ListItemText
-                                primary={t(item.moreTitle ?? item.title)}
-                                secondary={item.useBadge?.().title}
-                            />
-                        </ListItemLink>
-                    ))}
-                    {index !== list.length - 1 && <Divider />}
-                </Fragment>
-            ))}
+            {Object.entries(finalHiddenNavBarItemsByGroup)
+                .filter(([, items]) => items.length)
+                .map(([group, items], index, list) => (
+                    <Fragment key={group}>
+                        {items.map((item) => (
+                            <ListItemLink key={item.path} to={item.path}>
+                                <ListItemIcon>
+                                    <item.IconComponent />
+                                </ListItemIcon>
+                                <ListItemText
+                                    primary={t(item.moreTitle ?? item.title)}
+                                    secondary={item.useBadge?.().title}
+                                />
+                            </ListItemLink>
+                        ))}
+                        {group === String(NavBarItemMoreGroup.SETTING_INFO) && <LogoutButton />}
+                        {index !== list.length - 1 && <Divider />}
+                    </Fragment>
+                ))}
         </List>
     );
 };

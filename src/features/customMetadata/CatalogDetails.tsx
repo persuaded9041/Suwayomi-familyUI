@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { AuthManager } from '@/features/authentication/AuthManager.ts';
 import { useState } from 'react';
 import { useLingui } from '@lingui/react/macro';
 import Button from '@mui/material/Button';
@@ -52,6 +53,10 @@ export const CatalogDetails = ({
 export const MetadataImportButton = ({ work }: { work: ImportableWork }) => {
     const { t } = useLingui();
     const [open, setOpen] = useState(false);
+    const isAdmin = AuthManager.useIsAdmin();
+    if (!isAdmin) {
+        return null;
+    }
     return (
         <>
             <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap', alignItems: 'center', mt: 1 }}>

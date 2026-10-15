@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { AuthManager } from '@/features/authentication/AuthManager.ts';
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Direction } from '@mui/material/styles';
@@ -150,6 +151,10 @@ export class ReaderService {
         pageIndex: number,
         downloadAheadLimit: number,
     ): void {
+        if (!AuthManager.isAdmin()) {
+            return;
+        }
+
         const key = `${currentChapter.id}_${nextChapter?.id}_${pageIndex}_${downloadAheadLimit}`;
 
         ReaderService.downloadAheadQueue.enqueue(key, async () => {
@@ -239,7 +244,7 @@ export class ReaderService {
                         mangaChapters,
                         previousChapters,
                         patch,
-                        deleteChaptersWhileReading,
+                        AuthManager.isAdmin() ? deleteChaptersWhileReading : 0,
                         deleteChaptersWithBookmark,
                         shouldSkipDupChapters,
                     );

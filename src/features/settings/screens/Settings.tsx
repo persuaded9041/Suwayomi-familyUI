@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { AdminOnly } from '@/features/authentication/components/AdminOnly.tsx';
 import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import List from '@mui/material/List';
 import BackupIcon from '@mui/icons-material/Backup';
@@ -45,42 +46,44 @@ export function Settings() {
                 </ListItemIcon>
                 <ListItemText primary={t`Reader`} />
             </ListItemLink>
-            <ListItemLink to={AppRoutes.settings.children.library.path}>
-                <ListItemIcon>
-                    <CollectionsOutlinedBookmarkIcon />
-                </ListItemIcon>
-                <ListItemText primary={t`Library`} />
-            </ListItemLink>
-            <ListItemLink to={AppRoutes.settings.children.download.path}>
-                <ListItemIcon>
-                    <GetAppOutlinedIcon />
-                </ListItemIcon>
-                <ListItemText primary={t`Downloads`} />
-            </ListItemLink>
-            <ListItemLink to={AppRoutes.settings.children.images.path}>
-                <ListItemIcon>
-                    <ImageIcon />
-                </ListItemIcon>
-                <ListItemText primary={t`Images`} />
-            </ListItemLink>
-            <ListItemLink to={AppRoutes.settings.children.tracking.path}>
-                <ListItemIcon>
-                    <SyncIcon />
-                </ListItemIcon>
-                <ListItemText primary={t`Tracking`} />
-            </ListItemLink>
-            <ListItemLink to={AppRoutes.settings.children.backup.path}>
-                <ListItemIcon>
-                    <BackupIcon />
-                </ListItemIcon>
-                <ListItemText primary={t`Backup`} />
-            </ListItemLink>
-            <ListItemLink to={AppRoutes.settings.children.browse.path}>
-                <ListItemIcon>
-                    <ExploreOutlinedIcon />
-                </ListItemIcon>
-                <ListItemText primary={t`Browse`} />
-            </ListItemLink>
+            <AdminOnly>
+                <ListItemLink to={AppRoutes.settings.children.library.path}>
+                    <ListItemIcon>
+                        <CollectionsOutlinedBookmarkIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={t`Library`} />
+                </ListItemLink>
+                <ListItemLink to={AppRoutes.settings.children.download.path}>
+                    <ListItemIcon>
+                        <GetAppOutlinedIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={t`Downloads`} />
+                </ListItemLink>
+                <ListItemLink to={AppRoutes.settings.children.images.path}>
+                    <ListItemIcon>
+                        <ImageIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={t`Images`} />
+                </ListItemLink>
+                <ListItemLink to={AppRoutes.settings.children.tracking.path}>
+                    <ListItemIcon>
+                        <SyncIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={t`Tracking`} />
+                </ListItemLink>
+                <ListItemLink to={AppRoutes.settings.children.backup.path}>
+                    <ListItemIcon>
+                        <BackupIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={t`Backup`} />
+                </ListItemLink>
+                <ListItemLink to={AppRoutes.settings.children.browse.path}>
+                    <ListItemIcon>
+                        <ExploreOutlinedIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={t`Browse`} />
+                </ListItemLink>
+            </AdminOnly>
             <ListItemLink to={AppRoutes.settings.children.history.path}>
                 <ListItemIcon>
                     <HistoryIcon />
@@ -93,18 +96,20 @@ export function Settings() {
                 </ListItemIcon>
                 <ListItemText primary={t`Device`} />
             </ListItemLink>
-            <ListItemLink to={AppRoutes.settings.children.webui.path}>
-                <ListItemIcon>
-                    <WebIcon />
-                </ListItemIcon>
-                <ListItemText primary={t`WebUI`} />
-            </ListItemLink>
-            <ListItemLink to={AppRoutes.settings.children.server.path}>
-                <ListItemIcon>
-                    <DnsIcon />
-                </ListItemIcon>
-                <ListItemText primary={t`Server`} />
-            </ListItemLink>
+            <AdminOnly>
+                <ListItemLink to={AppRoutes.settings.children.webui.path}>
+                    <ListItemIcon>
+                        <WebIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={t`WebUI`} />
+                </ListItemLink>
+                <ListItemLink to={AppRoutes.settings.children.server.path}>
+                    <ListItemIcon>
+                        <DnsIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={t`Server`} />
+                </ListItemLink>
+            </AdminOnly>
         </List>
     );
 }

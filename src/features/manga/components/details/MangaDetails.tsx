@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { AdminOnly } from '@/features/authentication/components/AdminOnly.tsx';
 import { CatalogDetails, MetadataImportButton } from '@/features/customMetadata/CatalogDetails.tsx';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -160,19 +161,21 @@ const OpenSourceButton = ({ url }: { url?: string | null }) => {
                     <IconBrowser />
                 </CustomIconButton>
             </CustomTooltip>
-            <CustomTooltip title={t`Open in WebView`} disabled={!url}>
-                <CustomIconButton
-                    size="medium"
-                    disabled={!url}
-                    component={Link}
-                    href={url ? requestManager.getWebviewUrl(url) : undefined}
-                    target="_blank"
-                    rel="noreferrer"
-                    variant="outlined"
-                >
-                    <IconWebView />
-                </CustomIconButton>
-            </CustomTooltip>
+            <AdminOnly>
+                <CustomTooltip title={t`Open in WebView`} disabled={!url}>
+                    <CustomIconButton
+                        size="medium"
+                        disabled={!url}
+                        component={Link}
+                        href={url ? requestManager.getWebviewUrl(url) : undefined}
+                        target="_blank"
+                        rel="noreferrer"
+                        variant="outlined"
+                    >
+                        <IconWebView />
+                    </CustomIconButton>
+                </CustomTooltip>
+            </AdminOnly>
         </ButtonGroup>
     );
 };
@@ -237,15 +240,17 @@ export const MangaDetails = ({
                     </MetadataContainer>
                 </ThumbnailMetadataWrapper>
                 <MangaButtonsContainer>
-                    <FlexWrapButton
-                        size={MediaQuery.useIsMobileWidth() ? 'small' : 'medium'}
-                        onClick={updateLibraryState}
-                        variant={manga.inLibrary ? 'contained' : 'outlined'}
-                    >
-                        {manga.inLibrary ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-                        {manga.inLibrary ? t`In Library` : t`Add To Library`}
-                    </FlexWrapButton>
-                    <TrackMangaButton manga={manga} />
+                    <AdminOnly>
+                        <FlexWrapButton
+                            size={MediaQuery.useIsMobileWidth() ? 'small' : 'medium'}
+                            onClick={updateLibraryState}
+                            variant={manga.inLibrary ? 'contained' : 'outlined'}
+                        >
+                            {manga.inLibrary ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+                            {manga.inLibrary ? t`In Library` : t`Add To Library`}
+                        </FlexWrapButton>
+                        <TrackMangaButton manga={manga} />
+                    </AdminOnly>
                     <OpenSourceButton url={manga.realUrl} />
                 </MangaButtonsContainer>
             </TopContentWrapper>

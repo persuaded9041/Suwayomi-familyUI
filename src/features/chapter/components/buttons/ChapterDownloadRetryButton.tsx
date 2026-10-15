@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { AuthManager } from '@/features/authentication/AuthManager.ts';
 import Refresh from '@mui/icons-material/Refresh';
 import IconButton from '@mui/material/IconButton';
 import { useLingui } from '@lingui/react/macro';
@@ -20,6 +21,7 @@ import type { ChapterIdInfo } from '@/features/chapter/Chapter.types.ts';
 
 export const ChapterDownloadRetryButton = ({ chapterId }: { chapterId: ChapterIdInfo['id'] }) => {
     const { t } = useLingui();
+    const isAdmin = AuthManager.useIsAdmin();
     const download = Chapters.useDownloadStatusFromCache(chapterId);
 
     const handleRetry = async () => {
@@ -30,7 +32,7 @@ export const ChapterDownloadRetryButton = ({ chapterId }: { chapterId: ChapterId
         }
     };
 
-    if (download?.state !== DownloadState.Error) {
+    if (!isAdmin || download?.state !== DownloadState.Error) {
         return null;
     }
 

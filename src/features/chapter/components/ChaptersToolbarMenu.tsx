@@ -28,6 +28,7 @@ import type {
 } from '@/features/chapter/Chapter.types.ts';
 import { ChaptersDownloadActionMenuItems } from '@/features/chapter/components/actions/ChaptersDownloadActionMenuItems.tsx';
 import { Chapters } from '@/features/chapter/services/Chapters.ts';
+import { AdminOnly } from '@/features/authentication/components/AdminOnly.tsx';
 
 interface IProps {
     mangaId: number;
@@ -65,26 +66,31 @@ export const ChaptersToolbarMenu = ({
                     <DoneAllIcon />
                 </IconButton>
             </CustomTooltip>
-            <PopupState variant="popover" popupId="chapterlist-download-button">
-                {(popupState) => (
-                    <>
-                        <CustomTooltip title={t`Download`} disabled={areAllChaptersRead}>
-                            <IconButton
-                                disabled={areAllChaptersDownloaded}
-                                {...bindTrigger(popupState)}
-                                color="inherit"
-                            >
-                                <DownloadIcon />
-                            </IconButton>
-                        </CustomTooltip>
-                        {popupState.isOpen && (
-                            <Menu {...bindMenu(popupState)}>
-                                <ChaptersDownloadActionMenuItems mangaIds={[mangaId]} closeMenu={popupState.close} />
-                            </Menu>
-                        )}
-                    </>
-                )}
-            </PopupState>
+            <AdminOnly>
+                <PopupState variant="popover" popupId="chapterlist-download-button">
+                    {(popupState) => (
+                        <>
+                            <CustomTooltip title={t`Download`} disabled={areAllChaptersRead}>
+                                <IconButton
+                                    disabled={areAllChaptersDownloaded}
+                                    {...bindTrigger(popupState)}
+                                    color="inherit"
+                                >
+                                    <DownloadIcon />
+                                </IconButton>
+                            </CustomTooltip>
+                            {popupState.isOpen && (
+                                <Menu {...bindMenu(popupState)}>
+                                    <ChaptersDownloadActionMenuItems
+                                        mangaIds={[mangaId]}
+                                        closeMenu={popupState.close}
+                                    />
+                                </Menu>
+                            )}
+                        </>
+                    )}
+                </PopupState>
+            </AdminOnly>
             <CustomTooltip title={t`Filter and sort`}>
                 <IconButton onClick={() => setOpen(true)} color="inherit">
                     <FilterList color={isFiltered ? 'warning' : undefined} />

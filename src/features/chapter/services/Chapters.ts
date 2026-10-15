@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { AuthManager } from '@/features/authentication/AuthManager.ts';
 import type { DocumentNode, MaybeMasked, Unmasked } from '@apollo/client';
 import { useFragment } from '@apollo/client/react';
 import { t } from '@lingui/core/macro';
@@ -222,7 +223,7 @@ export class Chapters {
         const { deleteChaptersManuallyMarkedRead, deleteChaptersWithBookmark, updateProgressManualMarkRead } =
             await getMetadataServerSettings();
         const chapterIdsToDelete =
-            deleteChaptersManuallyMarkedRead && wasManuallyMarkedAsRead
+            AuthManager.isAdmin() && deleteChaptersManuallyMarkedRead && wasManuallyMarkedAsRead
                 ? Chapters.getIds(Chapters.getDeletable(chapters, deleteChaptersWithBookmark))
                 : [];
         return Chapters.executeAction(

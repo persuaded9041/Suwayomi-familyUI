@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { AdminOnly } from '@/features/authentication/components/AdminOnly.tsx';
 import { Fragment, useRef, useState } from 'react';
 import { useLingui } from '@lingui/react/macro';
 import Button from '@mui/material/Button';
@@ -88,18 +89,20 @@ export const Contributors = ({
                                   </Fragment>
                               ))
                             : t`Unknown`}
-                        <CustomTooltip title={editLabel}>
-                            <IconButton
-                                size="small"
-                                aria-label={editLabel}
-                                onClick={() => {
-                                    setDraft(names.map((name) => ({ id: nextId.current++, name })));
-                                    setOpen(true);
-                                }}
-                            >
-                                <EditIcon fontSize="small" />
-                            </IconButton>
-                        </CustomTooltip>
+                        <AdminOnly>
+                            <CustomTooltip title={editLabel}>
+                                <IconButton
+                                    size="small"
+                                    aria-label={editLabel}
+                                    onClick={() => {
+                                        setDraft(names.map((name) => ({ id: nextId.current++, name })));
+                                        setOpen(true);
+                                    }}
+                                >
+                                    <EditIcon fontSize="small" />
+                                </IconButton>
+                            </CustomTooltip>
+                        </AdminOnly>
                     </>
                 }
             />

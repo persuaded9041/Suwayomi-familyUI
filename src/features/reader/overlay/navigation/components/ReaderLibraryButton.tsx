@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { AuthManager } from '@/features/authentication/AuthManager.ts';
 import IconButton from '@mui/material/IconButton';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -24,11 +25,16 @@ const ACTION_FALLBACK_MANGA = {
 
 export const ReaderLibraryButton = memo(() => {
     const manga = useReaderStore('manga');
+    const isAdmin = AuthManager.useIsAdmin();
 
     const { inLibrary } = manga ?? ACTION_FALLBACK_MANGA;
 
     const { t } = useLingui();
     const { updateLibraryState } = useManageMangaLibraryState(manga ?? ACTION_FALLBACK_MANGA, true);
+
+    if (!isAdmin) {
+        return null;
+    }
 
     return (
         <CustomTooltip title={inLibrary ? t`Remove from the library` : t`Add To Library`}>

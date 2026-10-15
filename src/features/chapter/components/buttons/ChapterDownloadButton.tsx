@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { AuthManager } from '@/features/authentication/AuthManager.ts';
 import IconButton from '@mui/material/IconButton';
 import DownloadIcon from '@mui/icons-material/Download';
 import { useLingui } from '@lingui/react/macro';
@@ -25,6 +26,7 @@ export const ChapterDownloadButton = ({
     isDownloaded: boolean;
 }) => {
     const { t } = useLingui();
+    const isAdmin = AuthManager.useIsAdmin();
     const download = Chapters.useDownloadStatusFromCache(chapterId);
 
     const downloadChapter = () => {
@@ -33,7 +35,7 @@ export const ChapterDownloadButton = ({
             .response.catch((e) => makeToast(t`Failed to save changes`, 'error', getErrorMessage(e)));
     };
 
-    if (download != null || isDownloaded) {
+    if (!isAdmin || download != null || isDownloaded) {
         return null;
     }
 

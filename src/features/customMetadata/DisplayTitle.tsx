@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { AdminOnly } from '@/features/authentication/components/AdminOnly.tsx';
 import { useState } from 'react';
 import { useLingui } from '@lingui/react/macro';
 import Button from '@mui/material/Button';
@@ -125,7 +126,9 @@ export const DisplayTitle = ({ work }: { work: MangaIdInfo & MangaMetaInfo & Man
                     {displayTitle}
                 </Typography>
             </SearchLink>
-            <DisplayTitleButton key={work.id} work={work} />
+            <AdminOnly>
+                <DisplayTitleButton key={work.id} work={work} />
+            </AdminOnly>
             <ClipBoardGuard>
                 <CustomTooltip title={t`Copy`}>
                     <IconButton onClick={() => copyToClipboard(displayTitle)} color="inherit">

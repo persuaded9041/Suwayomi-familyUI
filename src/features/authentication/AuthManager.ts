@@ -12,6 +12,7 @@ import { assertIsDefined } from '@/base/Asserts.ts';
 import type { DecodedJwt, TokenPayload } from '@/features/authentication/Auth.types.ts';
 import { epochToDate } from '@/base/utils/DateHelper.ts';
 import { d } from 'koration';
+import { isAdministrator } from '@/features/authentication/AccessPolicy.ts';
 
 let notifierValue = 0;
 
@@ -23,6 +24,8 @@ export class AuthManager {
     private static subscribers = new Map<number, () => void>();
 
     private static accessToken: TokenPayload | null = null;
+
+    private static roles: string[] = [];
 
     private static authInitialized: boolean = false;
 
@@ -82,6 +85,15 @@ export class AuthManager {
 
     static isAuthInitialized(): boolean {
         return AuthManager.authInitialized;
+    }
+
+    static isAdmin(): boolean {
+        return isAdministrator(AuthManager.authRequired, AuthManager.roles);
+    }
+
+    static useIsAdmin(): boolean {
+        AuthManager.useSession();
+        return AuthManager.isAdmin();
     }
 
     static isAuthRequired(): boolean | null {
@@ -166,10 +178,14 @@ export class AuthManager {
 
     static setAccessToken(token: string): void {
         const {
-            payload: { exp },
-        } = AuthManager.decodeToken(token);
+            payload: { exp, roles },
+        } = AuthManager.decodeToken<{ roles?: unknown }>(token);
 
         assertIsDefined(exp);
+
+        AuthManager.roles = Array.isArray(roles)
+            ? roles.filter((role): role is string => typeof role === 'string')
+            : [];
 
         AuthManager.accessToken = {
             token,
@@ -189,6 +205,7 @@ export class AuthManager {
     }
 
     static removeAccessToken(): void {
+        AuthManager.roles = [];
         AuthManager.accessToken = null;
         AuthManager.notify();
     }

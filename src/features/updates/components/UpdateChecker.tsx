@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { AuthManager } from '@/features/authentication/AuthManager.ts';
 import { useEffect, useState } from 'react';
 import IconButton from '@mui/material/IconButton';
 import RefreshIcon from '@mui/icons-material/Refresh';
@@ -36,6 +37,7 @@ export function UpdateChecker({
     handleFinishedUpdate?: () => void;
 }) {
     const { t } = useLingui();
+    const isAdmin = AuthManager.useIsAdmin();
     const isTouchDevice = MediaQuery.useIsTouchDevice();
 
     const [isHovered, setIsHovered] = useState(false);
@@ -94,6 +96,10 @@ export function UpdateChecker({
             startUpdate(category);
         }
     };
+
+    if (!isAdmin) {
+        return null;
+    }
 
     return (
         <PopupState variant="popover" popupId="library-update-checker-menu">
