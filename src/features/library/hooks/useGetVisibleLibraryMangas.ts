@@ -6,6 +6,12 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import {
+    getDisplayTitle,
+    getSearchableContributors,
+    getSearchableTitles,
+    CATALOG_FUZZY_SEARCH_KEYS,
+} from '@/features/customMetadata/CatalogMetadata.ts';
 import { StringParam, useQueryParam } from 'use-query-params';
 import { useMemo } from 'react';
 import { useMetadataServerSettings } from '@/features/settings/services/ServerSettingsMetadata.ts';
@@ -17,6 +23,7 @@ import type { LibraryOptions, LibrarySortMode } from '@/features/library/Library
 import { FilterMode } from '@/features/library/Library.types.ts';
 import type { CategoryIdInfo, CategoryMetadataInfo } from '@/features/category/Category.types.ts';
 import type {
+    MangaMetaInfo,
     MangaArtistInfo,
     MangaAuthorInfo,
     MangaChapterCountInfo,
@@ -86,27 +93,29 @@ const performSearch = (
     return cleanedUpQueries.every((query) => cleanedUpStrings.includes(query));
 };
 
-type TMangaQueryFilter = MangaTitleInfo &
+type TMangaQueryFilter = MangaMetaInfo &
+    MangaTitleInfo &
     MangaGenreInfo &
     MangaDescriptionInfo &
     MangaArtistInfo &
     MangaAuthorInfo &
     MangaSourceIdInfo &
     MangaSourceNameInfo;
-const querySearchManga = (
-    query: NullAndUndefined<string>,
-    { title, genre: genres, description, artist, author, source, sourceId }: TMangaQueryFilter,
-): boolean =>
-    performSearch([query], [title]) ||
-    performSearch(
-        query?.split(','),
-        genres.map((genre) => enhancedCleanup(genre)),
-    ) ||
-    performSearch([query], [description]) ||
-    performSearch([query], [artist]) ||
-    performSearch([query], [author]) ||
-    performSearch([query], [source?.displayName]) ||
-    performSearch([query], [sourceId]);
+const querySearchManga = (query: NullAndUndefined<string>, manga: TMangaQueryFilter): boolean => {
+    const { genre: genres, description, source, sourceId } = manga;
+    return (
+        performSearch([query], getSearchableTitles(manga)) ||
+        performSearch(
+            query?.split(','),
+            genres.map((genre) => enhancedCleanup(genre)),
+        ) ||
+        performSearch([query], [description]) ||
+        performSearch([query], getSearchableContributors(manga, 'artists')) ||
+        performSearch([query], getSearchableContributors(manga, 'authors')) ||
+        performSearch([query], [source?.displayName]) ||
+        performSearch([query], [sourceId])
+    );
+};
 
 const listTriStateBooleanFilter = (
     mode: FilterMode,
@@ -187,8 +196,7 @@ const filterManga = (
 
 const FUZZY_SEARCH_WEIGHTS = [
     { name: 'title', weight: 10 },
-    { name: 'author', weight: 4 },
-    { name: 'artist', weight: 4 },
+    ...CATALOG_FUZZY_SEARCH_KEYS,
     { name: 'genre', weight: 2.5 },
     { name: 'source.displayName', weight: 1 },
     { name: 'sourceId', weight: 1 },
@@ -231,7 +239,7 @@ const sortManga = <Manga extends TMangaSort>(
     const primaryComparator = ((): ((a: Manga, b: Manga) => number) => {
         switch (sort) {
             case 'alphabetically':
-                return (a, b) => sortByString(a.title, b.title);
+                return (a, b) => sortByString(getDisplayTitle(a), getDisplayTitle(b));
             case 'dateAdded':
                 return (a, b) => sortByNumber(a.inLibraryAt, b.inLibraryAt);
             case 'unreadChapters':
@@ -260,7 +268,7 @@ const sortManga = <Manga extends TMangaSort>(
             return cmp;
         }
 
-        return sortByString(a.title, b.title);
+        return sortByString(getDisplayTitle(a), getDisplayTitle(b));
     });
 
     return result;
@@ -290,7 +298,11 @@ const useSortedMangas = <Manga extends MangaIdInfo & TMangasFilter & TMangaSort>
     const haveMangasChanged = !isEqual(mangas, cachedMangas);
     const haveMangaIdsChanged = !isEqual(mangaIds, cachedMangaIds);
     const haveSortOptionsChanged = previousSortBy !== options.sortBy || previousSortDesc !== options.sortDesc;
-    const reapplySorting = haveMangaIdsChanged || haveSortOptionsChanged;
+    const haveDisplayTitlesChanged = mangas.some((manga, index) => {
+        const previous = cachedMangas?.[index];
+        return !previous || getDisplayTitle(manga) !== getDisplayTitle(previous);
+    });
+    const reapplySorting = haveMangaIdsChanged || haveSortOptionsChanged || haveDisplayTitlesChanged;
 
     const sortedMangas = (() => {
         if (reapplySorting) {

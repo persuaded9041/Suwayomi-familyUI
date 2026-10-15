@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { getDisplayTitle } from '@/features/customMetadata/CatalogMetadata.ts';
 import Label from '@mui/icons-material/Label';
 import MoreHoriz from '@mui/icons-material/MoreHoriz';
 import Refresh from '@mui/icons-material/Refresh';
@@ -97,7 +98,7 @@ export const MangaToolbarMenu = ({ manga, onRefresh, refreshing }: IProps) => {
                                 onClick={() =>
                                     navigator
                                         .share({
-                                            title: manga.title,
+                                            title: getDisplayTitle(manga),
                                             url: manga.realUrl ?? undefined,
                                         })
                                         .catch(defaultPromiseErrorHandler('MangaToolbarMenu::share'))
@@ -211,7 +212,7 @@ export const MangaToolbarMenu = ({ manga, onRefresh, refreshing }: IProps) => {
                                 onClick={() =>
                                     navigator
                                         .share({
-                                            title: manga.title,
+                                            title: getDisplayTitle(manga),
                                             url: manga.realUrl ?? undefined,
                                         })
                                         .catch(defaultPromiseErrorHandler('MangaToolbarMenu::share'))

@@ -24,18 +24,17 @@ import type { ChapterIdInfo } from '@/features/chapter/Chapter.types.ts';
 import type { MetaInput } from '@/lib/graphql/generated/graphql-base.types.ts';
 
 type MetadataUpdateOptions = {
-    update?: MetadataKeyValuePair[];
-    delete?: AppMetadataKeys[];
     /**
      * Only ever pass the "migration" key value pair into this.
      */
     migrate?: MetadataKeyValuePair[];
     keyPrefixes?: string[];
-    /**
-     * Applies to "update" and "delete" metadata value pairs. "migrate" is excluded from this and is always expected to not be already converted to a metadata key
-     */
-    isMetadataKey?: boolean;
-};
+} &
+    // Raw keys bypass WebUI/device prefixes. Migration keys always retain their usual prefix.
+    (
+        | { isMetadataKey: true; update?: [string, MetadataKeyValuePair[1]][]; delete?: string[] }
+        | { isMetadataKey?: false; update?: MetadataKeyValuePair[]; delete?: AppMetadataKeys[] }
+    );
 
 type ProcessedEntityMetadata = {
     updateMetas: MetaInput[];

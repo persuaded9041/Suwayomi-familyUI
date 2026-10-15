@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { getDisplayTitle } from '@/features/customMetadata/CatalogMetadata.ts';
 import { useCallback, useEffect, useState } from 'react';
 import gql from 'graphql-tag';
 import { AwaitableComponent } from 'awaitable-component';
@@ -57,7 +58,7 @@ export const useManageMangaLibraryState = (
             await Confirmation.show(
                 {
                     title: t`Are you sure?`,
-                    message: t`You are about to remove "${manga.title}" from your library`,
+                    message: t`You are about to remove "${getDisplayTitle(manga)}" from your library`,
                     actions: {
                         confirm: {
                             title: t`Remove`,

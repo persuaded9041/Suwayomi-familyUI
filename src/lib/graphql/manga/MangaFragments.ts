@@ -18,9 +18,13 @@ export const MANGA_META_FIELDS = gql`
 `;
 
 export const MANGA_BASE_FIELDS = gql`
+    ${MANGA_META_FIELDS}
     fragment MANGA_BASE_FIELDS on MangaType {
         id
         title
+        meta {
+            ...MANGA_META_FIELDS
+        }
 
         thumbnailUrl
         thumbnailUrlLastFetched

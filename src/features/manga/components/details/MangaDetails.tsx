@@ -6,16 +6,14 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { CatalogDetails, MetadataImportButton } from '@/features/customMetadata/CatalogDetails.tsx';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { styled } from '@mui/material/styles';
 import type { ComponentProps, ReactNode } from 'react';
 import { useEffect } from 'react';
 import Link from '@mui/material/Link';
-import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import IconButton from '@mui/material/IconButton';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import { useLingui } from '@lingui/react/macro';
 import { t as translate } from '@lingui/core/macro';
@@ -48,16 +46,12 @@ import type {
 import { applyStyles } from '@/base/utils/ApplyStyles.ts';
 import { CustomIconButton } from '@/base/components/buttons/CustomIconButton.tsx';
 import { Sources } from '@/features/source/services/Sources.ts';
-import type { SourceIdInfo } from '@/features/source/Source.types.ts';
 import { Thumbnail } from '@/features/manga/components/details/Thumbnail.tsx';
 import { DescriptionGenre } from '@/features/manga/components/details/DescriptionGenre.tsx';
-import { SearchLink } from '@/features/manga/components/details/SearchLink.tsx';
 import { requestManager } from '@/lib/requests/RequestManager.ts';
 import { IconBrowser } from '@/assets/icons/IconBrowser.tsx';
 import { IconWebView } from '@/assets/icons/IconWebView.tsx';
 import { MediaQuery } from '@/base/utils/MediaQuery.tsx';
-import { copyToClipboard } from '@/lib/HelperFunctions.ts';
-import { ClipBoardGuard } from '@/base/components/guard/ClipBoardGuard.tsx';
 
 const DetailsWrapper = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -195,19 +189,6 @@ function getSourceName(source?: Pick<SourceType, 'id' | 'displayName'> | null): 
     return source.displayName ?? source.id;
 }
 
-const valuesToJoinedSearchLinks = (
-    values: string[] | undefined,
-    sourceId: SourceIdInfo['id'] | undefined,
-    mode: MangaLocationState['mode'],
-) =>
-    values
-        ?.map((value) => <SearchLink key={value} query={value} sourceId={sourceId} mode={mode} />)
-        .reduce((acc, valueLink) => (
-            <>
-                {acc}, {valueLink}
-            </>
-        ));
-
 export const MangaDetails = ({
     manga,
     mode,
@@ -249,34 +230,10 @@ export const MangaDetails = ({
                 <ThumbnailMetadataWrapper>
                     <Thumbnail manga={manga} mangaDynamicColorSchemes={mangaDynamicColorSchemes} />
                     <MetadataContainer>
-                        <Stack sx={{ flexDirection: 'row', gap: 1, alignItems: 'flex-start', mb: 1 }}>
-                            <SearchLink query={manga.title} sourceId={manga.sourceId} mode="source.global-search">
-                                <Typography variant="h5" component="h2" sx={{ wordBreak: 'break-word' }}>
-                                    {manga.title}
-                                </Typography>
-                            </SearchLink>
-                            <ClipBoardGuard>
-                                <CustomTooltip title={t`Copy`}>
-                                    <IconButton onClick={() => copyToClipboard(manga.title)} color="inherit">
-                                        <ContentCopyIcon fontSize="small" />
-                                    </IconButton>
-                                </CustomTooltip>
-                            </ClipBoardGuard>
-                        </Stack>
-                        {manga.author && (
-                            <Metadata
-                                title={t`Author`}
-                                value={valuesToJoinedSearchLinks(Mangas.getAuthors(manga), manga.source?.id, mode)}
-                            />
-                        )}
-                        {manga.artist && (
-                            <Metadata
-                                title={t`Artist`}
-                                value={valuesToJoinedSearchLinks(Mangas.getArtists(manga), manga.source?.id, mode)}
-                            />
-                        )}
+                        <CatalogDetails key={manga.id} work={manga} mode={mode} />
                         <Metadata title={t`Status`} value={t(MANGA_STATUS_TO_TRANSLATION[manga.status])} />
                         <Metadata title={t`Source`} value={getSourceName(manga.source)} />
+                        <MetadataImportButton key={manga.id} work={manga} />
                     </MetadataContainer>
                 </ThumbnailMetadataWrapper>
                 <MangaButtonsContainer>

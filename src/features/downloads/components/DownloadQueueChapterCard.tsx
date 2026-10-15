@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { getDisplayTitle } from '@/features/customMetadata/CatalogMetadata.ts';
 import DragHandle from '@mui/icons-material/DragHandle';
 import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
@@ -89,7 +90,7 @@ export const DownloadQueueChapterCard = memo(
                         >
                             <Stack sx={{ flexDirection: 'row', alignItems: 'end', flexWrap: 'wrap' }}>
                                 <ChapterCardMetadata
-                                    title={item.manga.title}
+                                    title={getDisplayTitle(item.manga)}
                                     secondaryText={item.chapter.scanlator}
                                     ternaryText={item.chapter.name}
                                 />

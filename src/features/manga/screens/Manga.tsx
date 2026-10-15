@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { getDisplayTitle } from '@/features/customMetadata/CatalogMetadata.ts';
 import Warning from '@mui/icons-material/Warning';
 import CircularProgress from '@mui/material/CircularProgress';
 import IconButton from '@mui/material/IconButton';
@@ -64,7 +65,7 @@ export const Manga: React.FC = () => {
     }, [manga]);
 
     useAppTitleAndAction(
-        manga?.title ?? t`Manga`,
+        manga ? getDisplayTitle(manga) : t`Manga`,
         <Stack
             direction="row"
             sx={{

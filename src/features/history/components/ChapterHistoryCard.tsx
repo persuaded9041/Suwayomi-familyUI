@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { getDisplayTitle } from '@/features/customMetadata/CatalogMetadata.ts';
 import Box from '@mui/material/Box';
 import CardActionArea from '@mui/material/CardActionArea';
 import Card from '@mui/material/Card';
@@ -62,14 +63,14 @@ export const ChapterHistoryCard = memo(
                             <ChapterCardThumbnail
                                 mangaId={manga.id}
                                 sourceId={manga.sourceId}
-                                mangaTitle={manga.title}
+                                mangaTitle={getDisplayTitle(manga)}
                                 thumbnailUrl={manga.thumbnailUrl}
                                 thumbnailUrlLastFetched={manga.thumbnailUrlLastFetched}
                             />
 
                             <Stack>
                                 <ChapterCardMetadata
-                                    title={manga.title}
+                                    title={getDisplayTitle(manga)}
                                     secondaryText={chapter.scanlator}
                                     ternaryText={`${chapter.name} — ${timeFormatter.format(epochToDate(Number(chapter.lastReadAt)).valueOf())}`}
                                 />

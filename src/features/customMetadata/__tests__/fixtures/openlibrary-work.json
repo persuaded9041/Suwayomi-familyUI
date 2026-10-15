@@ -1,0 +1,10 @@
+{
+    "type": { "key": "/type/work" },
+    "title": "Nude Model and Other Stories",
+    "authors": [{ "type": { "key": "/type/author_role" }, "author": { "key": "/authors/OL8100061A" } }],
+    "key": "/works/OL37863343W",
+    "latest_revision": 1,
+    "revision": 1,
+    "created": { "type": "/type/datetime", "value": "2024-02-17T14:08:08.796597" },
+    "last_modified": { "type": "/type/datetime", "value": "2024-02-17T14:08:08.796597" }
+}

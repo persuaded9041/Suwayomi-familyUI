@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { getDisplayTitle } from '@/features/customMetadata/CatalogMetadata.ts';
 import Link from '@mui/material/Link';
 import { Link as RouterLink } from 'react-router-dom';
 import Box from '@mui/material/Box';
@@ -59,7 +60,8 @@ export const MangaGridCard = memo(
         const preventMobileContextMenu = MediaQuery.usePreventMobileContextMenu();
         const optionButtonRef = useRef<HTMLButtonElement>(null);
 
-        const { id, title } = manga;
+        const { id } = manga;
+        const title = getDisplayTitle(manga);
 
         return (
             <Link

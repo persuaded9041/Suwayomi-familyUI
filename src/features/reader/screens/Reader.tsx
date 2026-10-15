@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { getDisplayTitle } from '@/features/customMetadata/CatalogMetadata.ts';
 import Box from '@mui/material/Box';
 import { memo, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -113,7 +114,7 @@ const BaseReader = ({
     useAppTitle(
         !manga || !currentChapter
             ? t`Reader — Manga ${mangaId} Chapter ${chapterSourceOrder}`
-            : `${manga.title}: ${currentChapter.name}`,
+            : `${getDisplayTitle(manga)}: ${currentChapter.name}`,
     );
 
     const {

@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { getDisplayTitle } from '@/features/customMetadata/CatalogMetadata.ts';
 import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
 import DownloadIcon from '@mui/icons-material/Download';
@@ -68,7 +69,7 @@ const DownloadButton = ({ id = -1, isDownloaded }: ChapterIdInfo & ChapterDownlo
 };
 
 export const ReaderNavBarDesktopActions = memo(() => {
-    const mangaTitle = useReaderStore((state) => state.manga?.title);
+    const mangaTitle = useReaderStore((state) => (state.manga ? getDisplayTitle(state.manga) : undefined));
     const { id, name, isDownloaded, isBookmarked, realUrl } = useReaderChaptersStore((state) => ({
         id: state.currentChapter?.id ?? FALLBACK_CHAPTER.id,
         name: state.currentChapter?.name ?? FALLBACK_CHAPTER.name,

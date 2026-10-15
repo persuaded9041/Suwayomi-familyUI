@@ -488,6 +488,7 @@ export type ChapterUpdateListFieldsFragment = {
         __typename: 'MangaType';
         id: number;
         title: string;
+        meta: Array<{ __typename: 'MangaMetaType'; mangaId: number; key: string; value: string }>;
         thumbnailUrl: string | null;
         thumbnailUrlLastFetched: string | null;
         inLibrary: boolean;
@@ -520,6 +521,7 @@ export type ChapterHistoryListFieldsFragment = {
         __typename: 'MangaType';
         id: number;
         title: string;
+        meta: Array<{ __typename: 'MangaMetaType'; mangaId: number; key: string; value: string }>;
         thumbnailUrl: string | null;
         thumbnailUrlLastFetched: string | null;
         inLibrary: boolean;
@@ -829,6 +831,7 @@ export type GetChaptersUpdatesQuery = {
                 __typename: 'MangaType';
                 id: number;
                 title: string;
+                meta: Array<{ __typename: 'MangaMetaType'; mangaId: number; key: string; value: string }>;
                 thumbnailUrl: string | null;
                 thumbnailUrlLastFetched: string | null;
                 inLibrary: boolean;
@@ -886,6 +889,7 @@ export type GetChaptersHistoryQuery = {
                 __typename: 'MangaType';
                 id: number;
                 title: string;
+                meta: Array<{ __typename: 'MangaMetaType'; mangaId: number; key: string; value: string }>;
                 thumbnailUrl: string | null;
                 thumbnailUrlLastFetched: string | null;
                 inLibrary: boolean;
@@ -977,6 +981,7 @@ export type DownloadTypeFieldsFragment = {
         downloadCount: number;
         id: number;
         title: string;
+        meta: Array<{ __typename: 'MangaMetaType'; mangaId: number; key: string; value: string }>;
         thumbnailUrl: string | null;
         thumbnailUrlLastFetched: string | null;
         inLibrary: boolean;
@@ -1019,6 +1024,7 @@ export type DownloadStatusFieldsFragment = {
             downloadCount: number;
             id: number;
             title: string;
+            meta: Array<{ __typename: 'MangaMetaType'; mangaId: number; key: string; value: string }>;
             thumbnailUrl: string | null;
             thumbnailUrlLastFetched: string | null;
             inLibrary: boolean;
@@ -1066,6 +1072,7 @@ export type DownloadUpdatesFieldsFragment = {
                 downloadCount: number;
                 id: number;
                 title: string;
+                meta: Array<{ __typename: 'MangaMetaType'; mangaId: number; key: string; value: string }>;
                 thumbnailUrl: string | null;
                 thumbnailUrlLastFetched: string | null;
                 inLibrary: boolean;
@@ -1118,6 +1125,7 @@ export type ClearDownloaderMutation = {
                     downloadCount: number;
                     id: number;
                     title: string;
+                    meta: Array<{ __typename: 'MangaMetaType'; mangaId: number; key: string; value: string }>;
                     thumbnailUrl: string | null;
                     thumbnailUrlLastFetched: string | null;
                     inLibrary: boolean;
@@ -1205,6 +1213,7 @@ export type DequeueChapterDownloadMutation = {
                     downloadCount: number;
                     id: number;
                     title: string;
+                    meta: Array<{ __typename: 'MangaMetaType'; mangaId: number; key: string; value: string }>;
                     thumbnailUrl: string | null;
                     thumbnailUrlLastFetched: string | null;
                     inLibrary: boolean;
@@ -1258,6 +1267,7 @@ export type DequeueChapterDownloadsMutation = {
                     downloadCount: number;
                     id: number;
                     title: string;
+                    meta: Array<{ __typename: 'MangaMetaType'; mangaId: number; key: string; value: string }>;
                     thumbnailUrl: string | null;
                     thumbnailUrlLastFetched: string | null;
                     inLibrary: boolean;
@@ -1311,6 +1321,7 @@ export type EnqueueChapterDownloadMutation = {
                     downloadCount: number;
                     id: number;
                     title: string;
+                    meta: Array<{ __typename: 'MangaMetaType'; mangaId: number; key: string; value: string }>;
                     thumbnailUrl: string | null;
                     thumbnailUrlLastFetched: string | null;
                     inLibrary: boolean;
@@ -1364,6 +1375,7 @@ export type EnqueueChapterDownloadsMutation = {
                     downloadCount: number;
                     id: number;
                     title: string;
+                    meta: Array<{ __typename: 'MangaMetaType'; mangaId: number; key: string; value: string }>;
                     thumbnailUrl: string | null;
                     thumbnailUrlLastFetched: string | null;
                     inLibrary: boolean;
@@ -1417,6 +1429,7 @@ export type ReorderChapterDownloadMutation = {
                     downloadCount: number;
                     id: number;
                     title: string;
+                    meta: Array<{ __typename: 'MangaMetaType'; mangaId: number; key: string; value: string }>;
                     thumbnailUrl: string | null;
                     thumbnailUrlLastFetched: string | null;
                     inLibrary: boolean;
@@ -1470,6 +1483,7 @@ export type ReorderChapterDownloadsMutation = {
                     downloadCount: number;
                     id: number;
                     title: string;
+                    meta: Array<{ __typename: 'MangaMetaType'; mangaId: number; key: string; value: string }>;
                     thumbnailUrl: string | null;
                     thumbnailUrlLastFetched: string | null;
                     inLibrary: boolean;
@@ -1543,6 +1557,7 @@ export type GetDownloadStatusQuery = {
                 downloadCount: number;
                 id: number;
                 title: string;
+                meta: Array<{ __typename: 'MangaMetaType'; mangaId: number; key: string; value: string }>;
                 thumbnailUrl: string | null;
                 thumbnailUrlLastFetched: string | null;
                 inLibrary: boolean;
@@ -1597,6 +1612,7 @@ export type DownloadStatusSubscription = {
                     downloadCount: number;
                     id: number;
                     title: string;
+                    meta: Array<{ __typename: 'MangaMetaType'; mangaId: number; key: string; value: string }>;
                     thumbnailUrl: string | null;
                     thumbnailUrlLastFetched: string | null;
                     inLibrary: boolean;
@@ -2001,6 +2017,7 @@ export type MangaBaseFieldsFragment = {
     __typename: 'MangaType';
     id: number;
     title: string;
+    meta: Array<{ __typename: 'MangaMetaType'; mangaId: number; key: string; value: string }>;
     thumbnailUrl: string | null;
     thumbnailUrlLastFetched: string | null;
     inLibrary: boolean;
@@ -2118,6 +2135,7 @@ export type MangaMigrationFieldsFragment = {
     author: string | null;
     id: number;
     title: string;
+    meta: Array<{ __typename: 'MangaMetaType'; mangaId: number; key: string; value: string }>;
     thumbnailUrl: string | null;
     thumbnailUrlLastFetched: string | null;
     inLibrary: boolean;
@@ -2199,6 +2217,7 @@ export type MangaLibraryDuplicateScreenFieldsFragment = {
     description: string | null;
     id: number;
     title: string;
+    meta: Array<{ __typename: 'MangaMetaType'; mangaId: number; key: string; value: string }>;
     thumbnailUrl: string | null;
     thumbnailUrlLastFetched: string | null;
     inLibrary: boolean;
@@ -2700,6 +2719,7 @@ export type GetMangasBaseQuery = {
             __typename: 'MangaType';
             id: number;
             title: string;
+            meta: Array<{ __typename: 'MangaMetaType'; mangaId: number; key: string; value: string }>;
             thumbnailUrl: string | null;
             thumbnailUrlLastFetched: string | null;
             inLibrary: boolean;
@@ -2819,6 +2839,7 @@ export type GetMangasDuplicatesQuery = {
             description: string | null;
             id: number;
             title: string;
+            meta: Array<{ __typename: 'MangaMetaType'; mangaId: number; key: string; value: string }>;
             thumbnailUrl: string | null;
             thumbnailUrlLastFetched: string | null;
             inLibrary: boolean;
@@ -2861,6 +2882,7 @@ export type GetMigratableSourceMangasQuery = {
             author: string | null;
             id: number;
             title: string;
+            meta: Array<{ __typename: 'MangaMetaType'; mangaId: number; key: string; value: string }>;
             thumbnailUrl: string | null;
             thumbnailUrlLastFetched: string | null;
             inLibrary: boolean;
@@ -3859,6 +3881,7 @@ export type GetSourceMangasFetchMutation = {
             __typename: 'MangaType';
             id: number;
             title: string;
+            meta: Array<{ __typename: 'MangaMetaType'; mangaId: number; key: string; value: string }>;
             thumbnailUrl: string | null;
             thumbnailUrlLastFetched: string | null;
             inLibrary: boolean;
@@ -3883,6 +3906,7 @@ export type GetMigrationSourceMangasFetchMutation = {
             author: string | null;
             id: number;
             title: string;
+            meta: Array<{ __typename: 'MangaMetaType'; mangaId: number; key: string; value: string }>;
             thumbnailUrl: string | null;
             thumbnailUrlLastFetched: string | null;
             inLibrary: boolean;

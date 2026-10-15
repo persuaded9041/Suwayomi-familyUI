@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { getDisplayTitle } from '@/features/customMetadata/CatalogMetadata.ts';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -47,7 +48,8 @@ const BaseReaderOverlayHeaderMobile = ({ isVisible, ref }: MobileHeaderProps & {
     const manga = useReaderStore('manga');
     const scrollbar = useReaderScrollbarStore((state) => state);
 
-    const { id: mangaId, title } = manga ?? DEFAULT_MANGA;
+    const { id: mangaId } = manga ?? DEFAULT_MANGA;
+    const title = getDisplayTitle(manga ?? DEFAULT_MANGA);
     const { id: chapterId, name, realUrl, isBookmarked } = currentChapter ?? FALLBACK_CHAPTER;
 
     return (

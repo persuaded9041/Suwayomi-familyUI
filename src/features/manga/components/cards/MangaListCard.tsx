@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { getDisplayTitle } from '@/features/customMetadata/CatalogMetadata.ts';
 import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
 import Box from '@mui/material/Box';
@@ -40,7 +41,8 @@ export const MangaListCard = memo(
 
         const optionButtonRef = useRef<HTMLButtonElement>(null);
 
-        const { id, title } = manga;
+        const { id } = manga;
+        const title = getDisplayTitle(manga);
 
         return (
             <Card>
@@ -73,7 +75,7 @@ export const MangaListCard = memo(
                     >
                         <ListCardAvatar
                             iconUrl={Mangas.getThumbnailUrl(manga)}
-                            alt={manga.title}
+                            alt={title}
                             slots={{
                                 spinnerImageProps: {
                                     imgStyle: {

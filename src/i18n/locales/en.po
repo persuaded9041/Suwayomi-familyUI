@@ -4389,3 +4389,156 @@ msgstr "Your library is empty"
 #: src/features/settings/Settings.constants.ts
 msgid "Your library will be accessible. Use this only on private networks or when otherwise securing access."
 msgstr "Your library will be accessible. Use this only on private networks or when otherwise securing access."
+
+#: src/features/customMetadata/DisplayTitle.tsx
+msgid "Edit display title"
+msgstr "Edit display title"
+
+#: src/features/customMetadata/DisplayTitle.tsx
+msgid "Display title"
+msgstr "Display title"
+
+#: src/features/customMetadata/DisplayTitle.tsx
+msgid "Original title: {0}"
+msgstr "Original title: {0}"
+
+#: src/features/customMetadata/DisplayTitle.tsx
+msgid "Restore original title"
+msgstr "Restore original title"
+
+#: src/features/customMetadata/DisplayTitle.tsx
+msgid "Could not save display title"
+msgstr "Could not save display title"
+
+#: src/features/customMetadata/Contributors.tsx
+msgid "Edit authors"
+msgstr "Edit authors"
+
+#: src/features/customMetadata/Contributors.tsx
+msgid "Edit artists"
+msgstr "Edit artists"
+
+#: src/features/customMetadata/Contributors.tsx
+msgid "Restore source information"
+msgstr "Restore source information"
+
+#: src/features/customMetadata/AlternativeTitles.tsx
+msgid "Alternative title"
+msgstr "Alternative title"
+
+#: src/features/customMetadata/AlternativeTitles.tsx
+#: src/features/customMetadata/MetadataImportDialog.tsx
+msgid "Alternative titles"
+msgstr "Alternative titles"
+
+#: src/features/customMetadata/AlternativeTitles.tsx
+msgid "Edit alternative titles"
+msgstr "Edit alternative titles"
+
+#: src/features/customMetadata/AlternativeTitles.tsx
+msgid "Title type"
+msgstr "Title type"
+
+#: src/features/customMetadata/MetadataImportDialog.tsx
+msgid "Check contributor roles. Unassigned contributors will not be imported."
+msgstr "Check contributor roles. Unassigned contributors will not be imported."
+
+#: src/features/customMetadata/MetadataImportDialog.tsx
+msgid "Confirm import"
+msgstr "Confirm import"
+
+#: src/features/customMetadata/MetadataImportDialog.tsx
+msgid "Contributors"
+msgstr "Contributors"
+
+#: src/features/customMetadata/MetadataImportDialog.tsx
+msgid "Load more contributors"
+msgstr "Load more contributors"
+
+#: src/features/customMetadata/MetadataImportDialog.tsx
+msgid "Main title"
+msgstr "Main title"
+
+#: src/features/customMetadata/MetadataImportDialog.tsx
+msgid "No results found"
+msgstr "No results found"
+
+#: src/features/customMetadata/MetadataImportDialog.tsx
+msgid "Proposed title"
+msgstr "Proposed title"
+
+#: src/features/customMetadata/MetadataImportDialog.tsx
+msgid "Proposed:"
+msgstr "Proposed:"
+
+#: src/features/customMetadata/MetadataImportDialog.tsx
+msgid "Retry after"
+msgstr "Retry after"
+
+#: src/features/customMetadata/MetadataImportDialog.tsx
+msgid "Select the categories to replace. Existing customizations in selected categories will be replaced."
+msgstr "Select the categories to replace. Existing customizations in selected categories will be replaced."
+
+#: src/features/customMetadata/MetadataImportDialog.tsx
+msgid "Story and art"
+msgstr "Story and art"
+
+#: src/features/customMetadata/MetadataImportDialog.tsx
+msgid "Unassigned"
+msgstr "Unassigned"
+
+#: src/features/customMetadata/AlternativeTitles.tsx
+msgid "Romaji"
+msgstr "Romaji"
+
+#: src/features/customMetadata/AlternativeTitles.tsx
+msgid "English"
+msgstr "English"
+
+#: src/features/customMetadata/AlternativeTitles.tsx
+msgid "Original/native"
+msgstr "Original/native"
+
+#: src/features/customMetadata/AlternativeTitles.tsx
+msgid "Synonym"
+msgstr "Synonym"
+
+#: src/features/customMetadata/CatalogDetails.tsx
+msgid "Import metadata"
+msgstr "Import metadata"
+
+#: src/features/customMetadata/MetadataImportDialog.tsx
+msgid "Open catalogue page"
+msgstr "Open catalogue page"
+
+#: src/features/customMetadata/MetadataImportDialog.tsx
+msgid "Catalogue"
+msgstr "Catalogue"
+
+#: src/features/customMetadata/MetadataImportDialog.tsx
+msgid "Metadata imported"
+msgstr "Metadata imported"
+
+#: src/features/customMetadata/MetadataImportDialog.tsx
+msgid "{service} returned an error"
+msgstr "{service} returned an error"
+
+#: src/features/customMetadata/MetadataImportDialog.tsx
+msgid "{service} rate limit reached"
+msgstr "{service} rate limit reached"
+
+#: src/features/customMetadata/MetadataImportDialog.tsx
+msgid "{service} access was refused (HTTP 403)."
+msgstr "{service} access was refused (HTTP 403)."
+
+#: src/features/customMetadata/MetadataImportDialog.tsx
+msgid "Could not contact {service}. Check your connection and browser access."
+msgstr "Could not contact {service}. Check your connection and browser access."
+
+#: src/features/customMetadata/MetadataImportDialog.tsx
+msgid "More contributors are available on {service}. This preview is incomplete."
+msgstr "More contributors are available on {service}. This preview is incomplete."
+
+#: src/features/customMetadata/MetadataImportDialog.tsx
+msgid "Select a catalogue"
+msgstr "Select a catalogue"

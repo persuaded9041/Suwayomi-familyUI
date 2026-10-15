@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { getDisplayTitle } from '@/features/customMetadata/CatalogMetadata.ts';
 import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
 import PushPinIcon from '@mui/icons-material/PushPin';
@@ -130,7 +131,7 @@ const BaseReaderNavBarDesktop = ({
                         <>
                             <ReaderNavBarDesktopMetadata
                                 mangaId={manga.id}
-                                mangaTitle={manga.title}
+                                mangaTitle={getDisplayTitle(manga)}
                                 chapterTitle={currentChapterName ?? ''}
                                 scanlator={currentChapterScanlator}
                             />

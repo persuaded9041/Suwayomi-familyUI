@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { getDisplayTitle } from '@/features/customMetadata/CatalogMetadata.ts';
 import type { ChipProps } from '@mui/material/Chip';
 import Chip from '@mui/material/Chip';
 import Tab from '@mui/material/Tab';
@@ -125,7 +126,7 @@ export function Library() {
     );
 
     const mangaIds = useMemo(() => mangas.map((manga) => manga.id), [mangas]);
-    const mangaTitles = useMemo(() => searchSuggestions.map((manga) => manga.title), [searchSuggestions]);
+    const mangaTitles = useMemo(() => searchSuggestions.map(getDisplayTitle), [searchSuggestions]);
 
     const [isSelectModeActive, setIsSelectModeActive] = useState(false);
     const {

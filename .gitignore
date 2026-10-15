@@ -3,6 +3,7 @@ node_modules/
 .vscode
 .env
 .idea
+.pnpm-store
 
 build/*
 dev-dist/*
