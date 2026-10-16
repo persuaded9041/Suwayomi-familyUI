@@ -4770,3 +4770,11 @@ msgstr "D’autres contributeurs sont disponibles sur {service}. Cette prévisua
 #: src/features/customMetadata/MetadataImportDialog.tsx
 msgid "Select a catalogue"
 msgstr "Sélectionnez un catalogue"
+
+#: src/features/customMetadata/MetadataImportDialog.tsx
+msgid "Comics & Graphic Novels"
+msgstr "Bandes dessinées et romans graphiques"
+
+#: src/features/customMetadata/MetadataImportDialog.tsx
+msgid "Disable this filter to find books with missing or incorrect categories."
+msgstr "Désactivez ce filtre pour retrouver les ouvrages dont les catégories sont absentes ou incorrectes."

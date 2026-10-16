@@ -21,6 +21,28 @@ export class OpenLibraryError extends Error {
 }
 const ORIGIN = 'https://openlibrary.org';
 const PAGE_SIZE = 20;
+// Search's analyzed subject field also matches subdivisions (e.g. "… - Superheroes")
+// and newer form:manga / form:graphic novel tags. Avoid exact subject_key matching.
+// https://openlibrary.org/search/howto#subject-search
+const COMICS_SUBJECTS = [
+    'Comic books, strips',
+    'Comic books',
+    'Comic strips',
+    'Comic strip',
+    'Comics & Graphic Novels',
+    'Cartoons and comics',
+    'Graphic novels',
+    'Graphic novel',
+    'Bandes dessinées',
+    'Bandes dessinees',
+    'Bande dessinée',
+    'Bande dessinee',
+    'Romans graphiques',
+    'Roman graphique',
+    'Manga',
+    'Mangas',
+];
+const COMICS_QUERY = `subject:(${COMICS_SUBJECTS.map((subject) => `"${subject}"`).join(' OR ')})`;
 const record = (value: unknown): Record<string, unknown> | undefined =>
     value !== null && typeof value === 'object' && !Array.isArray(value)
         ? (value as Record<string, unknown>)
@@ -163,7 +185,7 @@ export class OpenLibraryClient {
         }
     }
 
-    async search(query: string, page = 1, signal?: AbortSignal): Promise<CatalogSearchPage> {
+    async search(query: string, page = 1, signal?: AbortSignal, comicsOnly = true): Promise<CatalogSearchPage> {
         if (!Number.isSafeInteger(page) || page < 1) {
             throw new OpenLibraryError('invalid', 'Invalid Open Library page');
         }
@@ -176,6 +198,11 @@ export class OpenLibraryClient {
             limit: String(PAGE_SIZE),
             fields: 'key,title,author_name,cover_i,first_publish_year',
         });
+        if (comicsOnly) {
+            // Open Library combines q with the separately escaped title parameter.
+            // Keep free input out of the Solr expression and pagination on the server.
+            parameters.set('q', COMICS_QUERY);
+        }
         return parseOpenLibrarySearch(await this.request(`${ORIGIN}/search.json?${parameters}`, signal), page);
     }
 

@@ -26,6 +26,8 @@ migration or tracker changes are needed.
 - `MetadataImportDialog.tsx`: shared search/selection/preview/confirmation UI.
 - `MetadataImportValues.ts`: shared result/contributor types, names and helpers.
 - `useCatalogSearch.ts`: 500 ms debounce, numbered pagination, retry and cancellation.
+- `CatalogSearchState.ts`: search criteria and page transitions, including an atomic
+  pagination reset when the Open Library filter changes.
 - `anilist/`, `openLibrary/`: independent clients and conversion functions. Keep
   transport validation, rate limits and provider response shapes out of upstream UI.
 - `__tests__/`: Node tests with injected fetch/time and small response fixtures.
@@ -124,6 +126,52 @@ selection fetches `/works/OL…W.json`. Search author names are carried into the
 editable preview. No edition or author traversal, automatic illustrator inference
 or alternative-title collection is performed. Missing values remain editable and
 never erase existing information. Covers use actual returned cover IDs.
+
+The **Comics & Graphic Novels** checkbox is enabled for each new Open Library
+panel. The client adds a Solr `q=subject:("Comic books, strips" OR "Comics & Graphic Novels" OR …)`
+alongside the existing `title` parameter. Open Library combines the parameters;
+free title input stays outside the Solr expression. Subject alternatives are ORed,
+not required together. Filtering happens on Open Library before pagination, with
+`numFound` determining the next page. Results are never filtered locally by subject.
+Changing the checkbox resets the page and cancels/debounces the previous search.
+Disabling it omits `q` and restores the original unrestricted title search.
+
+Use analyzed `subject` matching rather than exact `subject_key` matching to retain
+subdivisions such as `Comics & graphic novels, manga, fantasy` and
+`Comics & Graphic Novels - Superheroes`. Alternatives include comic books/strips,
+`Cartoons and comics`, graphic novels, bandes dessinées (accented/unaccented,
+singular/plural), romans graphiques and manga. Singular graphic novel and manga
+also cover the newer `form:graphic novel` and `form:manga` subjects observed on
+One Piece. See the official [Search API](https://openlibrary.org/dev/docs/api/search)
+and [subject query documentation](https://openlibrary.org/search/howto#subject-search).
+
+Live checks on 2026-10-16 used the modified client, 20 results per page:
+
+| Title      | Without filter | With filter |
+| ---------- | -------------- | ----------- |
+| Astérix    | 630            | 77          |
+| Tintin     | 573            | 107         |
+| Watchmen   | 236            | 22          |
+| Batman     | 3319           | 764         |
+| Naruto     | 1296           | 123         |
+| One Piece  | 1909           | 176         |
+| Nude Model | 32             | 0           |
+
+Counts and rankings can change with the catalogue. Representative retained works
+include Astérix le Gaulois (`OL267622W`), Tintin au Tibet (`OL151071W`), Watchmen
+(`OL2897798W`), Batman (`OL2897789W`), Naruto 33 (`OL13268171W`) and One Piece 1
+(`OL8215661W`). Naruto page 2 returned 20 results with previous=1 and next=3.
+Additional queries scoped to the first 20 unfiltered work IDs distinguished actual
+exclusions from ranking changes: 20/20 Astérix, 15/20 Tintin, 10/20 Watchmen,
+18/20 Batman, 19/20 Naruto and 19/20 One Piece survived. Excluded works had no
+matching comics subjects, including unrelated prose/medical books and sparsely
+categorized works such as Absolute Watchmen (`OL8665966W`).
+Nude Model and Other Stories (`OL37863343W`) has no subjects and is excluded by
+the filter; disabling it recovers the work. This is why the filter must remain
+optional. A subject filter can also retain criticism or novelizations tagged with
+comics subjects; it cannot guarantee the physical format of every result.
+These live API checks and automated state/client tests do not validate browser
+rendering; no browser was available during this change.
 
 ### API access and limits
 

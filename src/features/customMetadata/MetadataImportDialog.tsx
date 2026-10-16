@@ -6,7 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useReducer, useRef, useState } from 'react';
 import { useLingui } from '@lingui/react/macro';
 import Alert from '@mui/material/Alert';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -63,6 +63,7 @@ import {
     mergeAniListContributors,
 } from '@/features/customMetadata/anilist/AniListMapper.ts';
 import { useCatalogSearch } from '@/features/customMetadata/useCatalogSearch.ts';
+import { catalogSearchReducer, createCatalogSearchState } from '@/features/customMetadata/CatalogSearchState.ts';
 import type { OpenLibraryWork } from '@/features/customMetadata/openLibrary/OpenLibraryClient.ts';
 import {
     openLibraryClient,
@@ -124,8 +125,11 @@ const CatalogImportPanel = ({
 }) => {
     const { t } = useLingui();
     const service = METADATA_CATALOGUE_NAMES[catalogue];
-    const [query, setQuery] = useState(getDisplayTitle(work));
-    const [page, setPage] = useState<number>();
+    const [{ query, page, openLibraryComicsOnly }, dispatchSearch] = useReducer(
+        catalogSearchReducer,
+        getDisplayTitle(work),
+        createCatalogSearchState,
+    );
     const [selectedId, setSelectedId] = useState<number>();
     const [selectedAuthors, setSelectedAuthors] = useState<string[]>([]);
     const [openLibraryWork, setOpenLibraryWork] = useState<OpenLibraryWork>();
@@ -141,7 +145,7 @@ const CatalogImportPanel = ({
     const [selection, setSelection] = useState(EMPTY_SELECTION);
     const [saving, setSaving] = useState(false);
     const [saveError, setSaveError] = useState<unknown>();
-    const search = useCatalogSearch(catalogue, query, page, selectedId === undefined);
+    const search = useCatalogSearch(catalogue, query, page, selectedId === undefined, openLibraryComicsOnly);
 
     useEffect(() => {
         if (selectedId === undefined) {
@@ -277,11 +281,26 @@ const CatalogImportPanel = ({
                             label={t`Search`}
                             fullWidth
                             value={query}
-                            onChange={(event) => {
-                                setQuery(event.target.value);
-                                setPage(undefined);
-                            }}
+                            onChange={(event) => dispatchSearch({ type: 'query', query: event.target.value })}
                         />
+                        {catalogue === 'openlibrary' && (
+                            <Box>
+                                <FormControlLabel
+                                    label={t`Comics & Graphic Novels`}
+                                    control={
+                                        <Checkbox
+                                            checked={openLibraryComicsOnly}
+                                            onChange={(_, checked) =>
+                                                dispatchSearch({ type: 'openLibraryComicsOnly', enabled: checked })
+                                            }
+                                        />
+                                    }
+                                />
+                                <Typography variant="body2" color="text.secondary">
+                                    {t`Disable this filter to find books with missing or incorrect categories.`}
+                                </Typography>
+                            </Box>
+                        )}
                         {search.loading && (
                             <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                                 <CircularProgress size={20} />
@@ -336,11 +355,11 @@ const CatalogImportPanel = ({
                         <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
                             <Button
                                 disabled={search.loading || search.result?.previous === undefined}
-                                onClick={() => setPage(search.result?.previous)}
+                                onClick={() => dispatchSearch({ type: 'page', page: search.result?.previous })}
                             >{t`Previous`}</Button>
                             <Button
                                 disabled={search.loading || search.result?.next === undefined}
-                                onClick={() => setPage(search.result?.next)}
+                                onClick={() => dispatchSearch({ type: 'page', page: search.result?.next })}
                             >{t`Next`}</Button>
                         </Stack>
                     </Stack>

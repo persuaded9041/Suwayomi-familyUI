@@ -18,8 +18,10 @@ export const useCatalogSearch = (
     query: string,
     page: number | undefined,
     enabled: boolean,
+    openLibraryComicsOnly = true,
 ) => {
     const term = query.trim();
+    const comicsOnly = catalogue === 'openlibrary' && openLibraryComicsOnly;
     const [result, setResult] = useState<CatalogSearchPage>();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<unknown>();
@@ -34,7 +36,7 @@ export const useCatalogSearch = (
         }
         const load = async (): Promise<CatalogSearchPage> => {
             if (catalogue === 'openlibrary') {
-                return openLibraryClient.search(term, page ?? 1, controller.signal);
+                return openLibraryClient.search(term, page ?? 1, controller.signal, comicsOnly);
             }
             const currentPage = page ?? 1;
             const data = await aniListClient.search(term, currentPage, controller.signal);
@@ -76,6 +78,6 @@ export const useCatalogSearch = (
             clearTimeout(timer);
             controller.abort();
         };
-    }, [catalogue, term, page, enabled, attempt]);
+    }, [catalogue, term, page, enabled, attempt, comicsOnly]);
     return { result, loading, error, retry: () => setAttempt((value) => value + 1) };
 };

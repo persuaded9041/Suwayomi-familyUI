@@ -4542,3 +4542,11 @@ msgstr "More contributors are available on {service}. This preview is incomplete
 #: src/features/customMetadata/MetadataImportDialog.tsx
 msgid "Select a catalogue"
 msgstr "Select a catalogue"
+
+#: src/features/customMetadata/MetadataImportDialog.tsx
+msgid "Comics & Graphic Novels"
+msgstr "Comics & Graphic Novels"
+
+#: src/features/customMetadata/MetadataImportDialog.tsx
+msgid "Disable this filter to find books with missing or incorrect categories."
+msgstr "Disable this filter to find books with missing or incorrect categories."
