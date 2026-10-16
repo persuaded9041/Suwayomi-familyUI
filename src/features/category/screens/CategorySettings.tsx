@@ -53,13 +53,13 @@ export function CategorySettings() {
         ComponentProps<typeof CategorySettingsCard>['category'] | null
     >(null);
 
-    const categories = useMemo(() => {
-        const res = [...(data?.categories.nodes ?? [])];
-        if (res.length > 0 && res[0].name === 'Default') {
-            res.shift();
-        }
-        return res;
-    }, [data]);
+    const categories = useMemo(
+        () =>
+            (data?.categories.nodes ?? [])
+                .filter((category) => !category.isDefaultCategory)
+                .sort((left, right) => left.order - right.order || left.id - right.id),
+        [data],
+    );
 
     const categoryReorder = (list: CategoryIdInfo[], from: number, to: number) => {
         const reorderedCategory = list[from];

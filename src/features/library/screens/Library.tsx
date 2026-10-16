@@ -81,10 +81,13 @@ export function Library() {
     } = requestManager.useGetCategories<GetCategoriesLibraryQuery, GetCategoriesLibraryQueryVariables>(
         GET_CATEGORIES_LIBRARY,
     );
-    const tabsData = categoriesResponse?.categories.nodes.filter(
-        (category) => category.id !== 0 || (category.id === 0 && category.mangas.totalCount),
+    // Exclude the built-in category from the tabs, regardless of its ID or name.
+    // Keep it as a fallback if the user has no custom categories yet.
+    const categories = categoriesResponse?.categories.nodes ?? STABLE_EMPTY_ARRAY;
+    const userCategories = categories.filter((category) => !category.isDefaultCategory);
+    const tabs = [...(userCategories.length ? userCategories : categories)].sort(
+        (left, right) => left.order - right.order || left.id - right.id,
     );
-    const tabs = tabsData ?? STABLE_EMPTY_ARRAY;
 
     const librarySizeResponse = requestManager.useGetMangas<GetMangasCountQuery, GetMangasCountQueryVariables>(
         GET_MANGAS_COUNT,
